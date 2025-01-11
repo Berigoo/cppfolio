@@ -1,5 +1,8 @@
+#ifndef SRC_UTILS_PATH_H
+#define SRC_UTILS_PATH_H
+
 #include <filesystem>
-#include "Logger.h"
+#include <cassert>
 
 namespace fs = std::filesystem;
 
@@ -17,3 +20,5 @@ class Path {
      */
     static std::string relative (std::string path);
 };
+
+#endif //SRC_UTILS_PATH_H

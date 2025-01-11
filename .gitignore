@@ -1,3 +1,5 @@
 storage/*
 build/*
 .git/*
+s.vim
+.env

@@ -1,6 +1,10 @@
-#include "utils/Path.h"
-#include <iostream>
+#include "server/Router.h"
+#include "server/Server.h"
 
 int main () {
-  std::cout << "Current path: " << Path::relative("src/models") << '\n';
+  Server::setup();
+
+  Router route;
+
+  Server::listen();
 }

@@ -1,18 +1,19 @@
+#ifndef SRC_SERVER_SERVER_H
+#define SRC_SERVER_SERVER_H
+
 #include <httplib.h>
+#include <optional>
 #include "../utils/Env.h"
+#include "../utils/Logger.h"
 
 class Server {
-  private:
-    static bool isStarted;
-#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-    std::unique_ptr<httplib::SSLServer> server;
-#else
-    std::unique_ptr<httplib::Server> server;
-#endif
   protected:
     Server ();
 
   public:
-    static Server& getInstance ();
-    void routeGET (std::string& pattern, std::function<void(const httplib::Request&, httplib::Response&)> cb);
+    static void setup ();
+    static void listen ();
+    static void GET (std::string pattern, std::function<void(const httplib::Request&, httplib::Response&)> cb);
 };
+
+#endif //SRC_SERVER_SERVER_H
