@@ -3,7 +3,7 @@
 
 class Router {
   private:
-    bool isConstructed = false;
+    static bool isConstructed;
 
   public:
     Router ();
