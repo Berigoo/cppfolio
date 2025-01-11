@@ -1,10 +1,14 @@
 #include "Logger.h"
-#include <filesystem>
 
 Logger::Logger () {
-  // to console & file
   std::filesystem::path logFile = PROJECT_ROOT;
   logFile = logFile / "storage/logs/default.log";
+  if (!std::filesystem::exists(logFile)) {
+    std::ofstream file{logFile};
+    file.close();
+  }
+
+  // to console & file
   logger = std::make_shared<spdlog::logger>("logger");
   logger->sinks().push_back(
       std::make_shared<spdlog::sinks::stdout_color_sink_mt>()
