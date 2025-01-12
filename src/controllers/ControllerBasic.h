@@ -3,7 +3,7 @@
 
 #include "Controller.h"
 
-class ControllerBasic : public Controller { 
+class ControllerBasic final : public Controller { 
   public:
     ControllerBasic ();
 };

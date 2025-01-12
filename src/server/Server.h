@@ -5,6 +5,7 @@
 #include <optional>
 #include "../utils/Env.h"
 #include "../utils/Logger.h"
+#include "../utils/Path.h"
 
 class Server {
   protected:

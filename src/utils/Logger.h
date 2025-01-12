@@ -6,6 +6,7 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <filesystem>
 #include <fstream>
+#include "Path.h"
 
 class Logger {
   protected:

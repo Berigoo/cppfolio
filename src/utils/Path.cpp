@@ -8,7 +8,7 @@ std::string Path::relative (std::string path) {
   std::filesystem::path p = root / path;
   std::string rel = std::filesystem::relative(p, std::filesystem::current_path());
   //TODO
-  assert(!rel.compare("") && "relative path value invalid");
+  assert(rel.compare("") > 0 && "relative path value invalid");
 
   return rel;
 }

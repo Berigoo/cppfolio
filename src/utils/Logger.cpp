@@ -3,7 +3,7 @@
 Logger::Logger () {
   std::filesystem::path logFile = PROJECT_ROOT;
   logFile = logFile / "storage/logs/default.log";
-  if (!std::filesystem::exists(logFile)) {
+  if (!std::filesystem::exists(Path::relative(logFile))) {
     std::ofstream file{logFile};
     file.close();
   }

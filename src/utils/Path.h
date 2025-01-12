@@ -3,6 +3,7 @@
 
 #include <filesystem>
 #include <cassert>
+#include "Logger.h"
 
 namespace fs = std::filesystem;
 

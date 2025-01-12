@@ -21,6 +21,8 @@ void Server::setup () {
 #else 
   server = std::make_unique<httplib::Server>();
 #endif 
+  
+  server->set_mount_point("/public", Path::relative("public"));
 
   isInitialized = true;
 }
