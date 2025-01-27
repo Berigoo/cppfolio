@@ -1,0 +1,19 @@
+nav {
+  position: absolute;
+  display: inline-flex;
+  justify-items: start;
+  align-items: flex-start;
+  padding: 10px;
+  color: white;
+  padding-left: 50px;
+
+  font-size: 1.5rem;
+}
+
+nav div {
+  margin: 10px;
+}
+
+nav div:hover() {
+  cursor: pointer;
+}

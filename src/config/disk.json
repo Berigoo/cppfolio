@@ -1,0 +1,6 @@
+{
+  [
+    "name": "local_public",
+    "path": "{{ base_path }}/storage/app/public"
+  ]
+}

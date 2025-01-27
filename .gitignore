@@ -1,5 +1,7 @@
-storage/*
+storage/app/private/*
+storage/logs/*
 build/*
 .git/*
 s.vim
 .env
+.cache/*
