@@ -2,6 +2,7 @@
 #define SRC_UTILS_JSON_JSONMODELBASE_H
 
 #include "nlohmann/detail/input/parser.hpp"
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <type_traits>
 
@@ -69,7 +70,7 @@ JsonModelBase JsonModelBase::parse(InputType&& i, const bool allow_exception,
 
   //TODO is it effecient ?
   for (const auto& constraint : cast.constraints) {
-    if (constraint.opt & (1 << FIELD_OPT::REQUIRED)) {
+    if ((constraint.opt & REQUIRED) != 0) {
       assert(cast.json.contains(constraint.key)); //TODO 
     }
   }

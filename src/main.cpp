@@ -17,7 +17,7 @@ int main () {
 
   Logger::getInstance()->logger->info(s);
   auto disks = JsonModelBase::parse<Disk>(s);
-  std::cout << std::setw(4) << disks["name"] << '\n';
+  std::cout << std::setw(4) << disks["path"] << '\n';
 
   Server::setup();
 
