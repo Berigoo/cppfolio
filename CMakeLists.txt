@@ -13,7 +13,6 @@ file(GLOB UTILS_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp" "${CMAKE_CU
 
 add_executable(cppfolio "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp" ${CONTROLLERS_SOURCE} ${SERVER_SOURCE} ${UTILS_SOURCE} ${OPENSSL_LIBRARIES})
 
-target_link_libraries(inja INTERFACE nlohmann_json::nlohmann_json)
 target_link_libraries(cppfolio nlohmann_json::nlohmann_json inja)
 
 target_compile_definitions(cppfolio PRIVATE PROJECT_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")

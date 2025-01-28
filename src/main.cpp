@@ -13,10 +13,14 @@ int main () {
     {"base_path", Path::relative(".")}
   };
   
-  std::string s = inja::render(ss.str(), data);
+  std::stringstream os;
+  inja::render_to(os, ss.str(), data);
 
-  auto disks = JsonModelBase::parse<Disk>(s);
-  std::cout << std::setw(4) << disks << '\n';
+  auto disksArr = JsonModelBase::parseArray<Disk>(os);
+  std::cout << disksArr.size() << '\n';
+  for (auto const& disk : disksArr) {
+    std::cout << std::setw(4) << disk << '\n';
+  }
 
   Server::setup();
 

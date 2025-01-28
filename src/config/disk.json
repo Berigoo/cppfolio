@@ -1,4 +1,10 @@
-{
-  "name": "local_public",
-  "path": "{{ base_path }}/storage/app/public"
-}
+[
+  {
+    "name": "local_public",
+    "path": "{{ base_path }}/storage/app/public"
+  },
+  {
+    "name": "local_private",
+    "path": "{{ base_path }}/storage/app/private"
+  }
+]
