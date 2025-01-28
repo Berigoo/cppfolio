@@ -1,9 +1,8 @@
 #include "Disk.h"
 
-//TODO rework flow
-Disk::Disk() : JsonModelBase() {
-  setConstraints({
-      {"path", REQUIRED},
-      {"name", REQUIRED}
-      });
+std::vector<Field> Disk::constraints() {
+  return {
+    {"path", REQUIRED},
+    {"name", REQUIRED}
+  };
 }

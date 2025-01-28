@@ -5,7 +5,9 @@
 
 class Disk : public JsonModelBase {
   public:
-    Disk();
+    Disk() = default;
+
+    std::vector<Field> constraints() override;
 };
 
 #endif 

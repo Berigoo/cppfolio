@@ -15,9 +15,8 @@ int main () {
   
   std::string s = inja::render(ss.str(), data);
 
-  Logger::getInstance()->logger->info(s);
   auto disks = JsonModelBase::parse<Disk>(s);
-  std::cout << std::setw(4) << disks["path"] << '\n';
+  std::cout << std::setw(4) << disks << '\n';
 
   Server::setup();
 

@@ -2,9 +2,11 @@
 #define SRC_UTILS_JSON_JSONMODELBASE_H
 
 #include "nlohmann/detail/input/parser.hpp"
+#include "nlohmann/detail/json_custom_base_class.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <type_traits>
+#include <vector>
 
 enum FIELD_OPT {
   NONE      = 0x00,
@@ -17,25 +19,19 @@ struct Field {
 
 };
 
-class JsonModelBase {
+//TODO derive from json_basic class 
+class JsonModelBase : public nlohmann::basic_json<> {
   public:
-    template<typename KeyType>
-      nlohmann::json& operator[](KeyType&& key);
+    virtual ~JsonModelBase() = default;
+
     template<typename T, typename InputType>
     static JsonModelBase parse(InputType&& i, const bool allow_exception = true,
         const bool ignore_comments = false);
 
-    void operator=(nlohmann::json&& val);
-    void operator=(nlohmann::json& val);
-    operator std::string() const;
-
   protected:
     JsonModelBase() = default;
 
-    nlohmann::json json;
-    std::vector<Field> constraints;
-
-    void setConstraints(std::vector<Field>&& constraints);
+    virtual std::vector<Field> constraints();
 
   private:
     //TODO is it effecient ?
@@ -43,22 +39,18 @@ class JsonModelBase {
         nlohmann::json& parsed);
 };
 
-template<typename KeyType>
-nlohmann::json& JsonModelBase::operator[](KeyType&& key) {
-  return json[key];
-}
-
 template<typename T, typename InputType>
 JsonModelBase JsonModelBase::parse(InputType&& i, const bool allow_exception,
     const bool ignore_comments) {
   static_assert(std::is_base_of_v<JsonModelBase, T>);
 
   T result;
-  JsonModelBase& cast = dynamic_cast<JsonModelBase&>(result);
-  cast.json = nlohmann::json::parse(i, [&](int depth, nlohmann::detail::parse_event_t event,
+  parser_callback_t f = nullptr;
+  if (result.constraints().size() > 0) {
+    f = [&](int depth, nlohmann::detail::parse_event_t event,
         nlohmann::json& parsed){
       if (event == nlohmann::json::parse_event_t::key) {
-        for(const auto& constraint : cast.constraints) {
+        for(const auto& constraint : result.constraints()) {
           if (nlohmann::json(constraint.key) == parsed) {
             return true;
           }
@@ -66,12 +58,15 @@ JsonModelBase JsonModelBase::parse(InputType&& i, const bool allow_exception,
         return false;
       }
       return true;
-      }, allow_exception, ignore_comments);
+    };
+  }
+
+  result.update(nlohmann::json::parse(i, std::move(f), allow_exception, ignore_comments));
 
   //TODO is it effecient ?
-  for (const auto& constraint : cast.constraints) {
+  for (const auto& constraint : result.constraints()) {
     if ((constraint.opt & REQUIRED) != 0) {
-      assert(cast.json.contains(constraint.key)); //TODO 
+      assert(result.contains(constraint.key)); //TODO 
     }
   }
 
