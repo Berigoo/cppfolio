@@ -7,5 +7,5 @@ ControllerBasic::ControllerBasic () {
 }
 
 void view (const httplib::Request& req, httplib::Response& res) {
-  res.set_content(Parser::parse(Path::relative("src/views/index.html")), "text/html");
+  res.set_content(Parser::parse(Path::relative("src/views/index.html"), nlohmann::json({{"hello", "world"}})), "text/html");
 }

@@ -1,4 +1,5 @@
 #include "../controllers/ControllerBasic.h"
+#include "../controllers/ControllerBlog.h"
 #include "Server.h"
 
 class Router {
