@@ -1,8 +1,10 @@
 #include "ControllerBlog.h"
+#include "nlohmann/json_fwd.hpp"
 
 static void view (const httplib::Request& req, httplib::Response& res);
 static void get (const httplib::Request& req, httplib::Response& res);
-static bool greaterThan1(const Views& view);
+
+static bool getByTag(const Views& view);
 
 extern Container<Views> g_views;
 
@@ -14,7 +16,28 @@ ControllerBlog::ControllerBlog () {
 void view (const httplib::Request& req, httplib::Response& res) {
   nlohmann::json j;
   j["views"] = nlohmann::json::array();
-  g_views.json(j["views"]);
+  j["tag"] = nullptr;
+
+  Container<Views> v;
+  if (req.has_param("tag")) {
+      std::string tag = req.get_param_value("tag");
+      j["tag"] = tag;
+      auto byTag = [&](const Views& view) {
+        auto vec = (view["tags"].get<std::vector<std::string>>());
+        auto it = std::find(vec.begin(), vec.end(), tag);
+
+        if (it != vec.end()) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+      v = g_views.get(byTag);
+  } else {
+    v = g_views;
+  }
+  v.json(j["views"]);
+
   res.set_content(Parser::parse(Path::relative("src/views/pages/Blog.html"), j), "text/html");
 }
 
@@ -26,13 +49,5 @@ void get (const httplib::Request& req, httplib::Response& res) {
   } else {
     res.status = 404;
     res.reason = "Not Found";
-  }
-}
-
-bool greaterThan1(const Views& view) {
-  if (view["id"] > 1) {
-    return true;
-  } else {
-    return false;
   }
 }
