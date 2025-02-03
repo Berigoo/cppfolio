@@ -1,5 +1,4 @@
 #include "JsonModelBase.h"
 
-std::vector<Field> JsonModelBase::constraints() {
-  return {};
-}
+template<typename Child>
+std::vector<Field> JsonModelBase<Child>::constraints = {};

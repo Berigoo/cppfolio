@@ -3,11 +3,9 @@
 
 #include "JsonModelBase.h"
 
-class Disk : public JsonModelBase {
+class Disk : public JsonModelBase<Disk> {
   public:
     Disk() = default;
-
-    static std::vector<Field> constraints();
 };
 
 #endif 

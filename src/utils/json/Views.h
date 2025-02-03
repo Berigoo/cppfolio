@@ -3,11 +3,9 @@
 
 #include "JsonModelBase.h"
 
-class Views : public JsonModelBase {
+class Views : public JsonModelBase<Views> {
   public:
     Views() = default;
-
-    static std::vector<Field> constraints();
 };
 
 

@@ -28,7 +28,7 @@ void Server::setup () {
 
     std::stringstream os;
     inja::render_to(os, ss.str(), data);
-    g_disk = JsonModelBase::parseArray<Disk>(os);
+    g_disk = Disk::parseArray(os);
     file.close();
   }
 
@@ -45,7 +45,7 @@ void Server::setup () {
 
     std::stringstream os;
     inja::render_to(os, ss.str(), data);
-    g_views = JsonModelBase::parseArray<Views>(os);
+    g_views = Views::parseArray(os);
     file.close();
   }
 

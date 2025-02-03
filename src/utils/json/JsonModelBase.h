@@ -20,40 +20,35 @@ struct Field {
 
 };
 
-//TODO derive from json_basic class 
+template<typename Child>
 class JsonModelBase : public nlohmann::basic_json<> {
   public:
-    virtual ~JsonModelBase() = default;
-
-    template<typename T, typename InputType>
-    static T parse(InputType&& i, const bool allow_exception = true,
-        const bool ignore_comments = false);
-    template<typename T, typename InputType>
-      static Container<T> parseArray(InputType&& i, const bool allow_exception = true,
+    template<typename InputType>
+      static Child parse(InputType&& i, const bool allow_exception = true,
+          const bool ignore_comments = false);
+    template<typename InputType>
+      static Container<Child> parseArray(InputType&& i, const bool allow_exception = true,
           const bool ignore_comments = false);
 
   protected:
     JsonModelBase() = default;
 
-    static std::vector<Field> constraints();
-
-  private:
-    //TODO is it effecient ?
-    bool cb(int depth, nlohmann::detail::parse_event_t event,
-        nlohmann::json& parsed);
+    static std::vector<Field> constraints;
 };
 
-template<typename T, typename InputType>
-T JsonModelBase::parse(InputType&& i, const bool allow_exception,
+template<typename Child>
+template<typename InputType>
+Child JsonModelBase<Child>::parse(InputType&& i, const bool allow_exception,
     const bool ignore_comments) {
-  static_assert(std::is_base_of_v<JsonModelBase, T>);
+  static_assert(std::is_base_of_v<JsonModelBase, Child>);
 
+  Child res;
   parser_callback_t f = nullptr;
-  if (T::constraints().size() > 0) {
+  if (Child::constraints.size() > 0) {
     f = [&](int depth, nlohmann::detail::parse_event_t event,
         nlohmann::json& parsed){
       if (event == nlohmann::json::parse_event_t::key) {
-        for(const auto& constraint : T::constraints()) {
+        for(const auto& constraint : Child::constraints) {
           if (nlohmann::json(constraint.key) == parsed) {
             return true;
           }
@@ -64,13 +59,12 @@ T JsonModelBase::parse(InputType&& i, const bool allow_exception,
     };
   }
 
-  T result;
+  Child result;
   result.update(nlohmann::json::parse(i, std::move(f), allow_exception, ignore_comments));
 
-  //TODO is it effecient ?
-  for (const auto& constraint : result.constraints()) {
+  for (const auto& constraint : result.constraints) {
     if ((constraint.opt & REQUIRED) != 0) {
-      assert(result.contains(constraint.key)); //TODO 
+      assert(result.contains(constraint.key)); //TODO throw error | callback
     }
   }
 
@@ -78,31 +72,32 @@ T JsonModelBase::parse(InputType&& i, const bool allow_exception,
 }
 
 //TODO nested object parse
-template<typename T, typename InputType>
-Container<T> JsonModelBase::parseArray(InputType&& i, const bool allow_exception,
+template<typename Child>
+template<typename InputType>
+Container<Child> JsonModelBase<Child>::parseArray(InputType&& i, const bool allow_exception,
     const bool ignore_comments) {
-  static_assert(std::is_base_of_v<JsonModelBase, T>);
+  static_assert(std::is_base_of_v<JsonModelBase, Child>);
 
-  Container<T> cont;
+  Container<Child> cont;
   parser_callback_t f = nullptr;
-  if (T::constraints().size() > 0) {
+  if (Child::constraints.size() > 0) {
     f = [&](int depth, nlohmann::detail::parse_event_t event,
         nlohmann::json& parsed){
       if (event == nlohmann::json::parse_event_t::key) {
-        for(const auto& constraint : T::constraints()) {
+        for(const auto& constraint : Child::constraints) {
           if (nlohmann::json(constraint.key) == parsed) {
             return true;
           }
         }
         return false;
       } else if (event == nlohmann::json::parse_event_t::object_end) {
-        //TODO is it effecient ?
-        for (const auto& constraint : T::constraints()) {
+        //TODO what if nested obj
+        for (const auto& constraint : Child::constraints) {
           if ((constraint.opt & REQUIRED) != 0) {
-            assert(parsed.contains(constraint.key)); //TODO 
+            assert(parsed.contains(constraint.key)); //TODO throw error | callback
           }
         }
-        T entry;
+        Child entry;
         entry.update(parsed);
         cont.push_back(entry);
         return true;

@@ -1,8 +1,7 @@
 #include "Disk.h"
 
-std::vector<Field> Disk::constraints() {
-  return {
+template<>
+std::vector<Field> JsonModelBase<Disk>::constraints = {
     {"path", REQUIRED},
     {"name", REQUIRED}
-  };
-}
+};
