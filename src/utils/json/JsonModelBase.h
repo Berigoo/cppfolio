@@ -3,8 +3,6 @@
 
 #include "Container.h"
 #include "nlohmann/detail/input/parser.hpp"
-#include "nlohmann/detail/json_custom_base_class.hpp"
-#include <iostream>
 #include <nlohmann/json.hpp>
 #include <type_traits>
 #include <vector>
@@ -48,7 +46,7 @@ Child JsonModelBase<Child>::parse(InputType&& i, const bool allow_exception,
     f = [&](int depth, nlohmann::detail::parse_event_t event,
         nlohmann::json& parsed){
       if (event == nlohmann::json::parse_event_t::key) {
-        for(const auto& constraint : Child::constraints) {
+        for(const auto& constraint : Child::constraints) {  //TODO around O(n_key*n_constrains)
           if (nlohmann::json(constraint.key) == parsed) {
             return true;
           }

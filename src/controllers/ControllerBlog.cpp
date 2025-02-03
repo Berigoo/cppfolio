@@ -7,8 +7,18 @@ static void get (const httplib::Request& req, httplib::Response& res);
 static bool getByTag(const Views& view);
 
 extern Container<Views> g_views;
+extern inja::Environment g_templates;
+
+static std::string sIndexBlogContent;
 
 ControllerBlog::ControllerBlog () {
+  std::ifstream file(Path::relative("src/views/pages/Blog.html"));
+  assert(file.is_open());       //TODO
+  std::stringstream ss;
+  ss << file.rdbuf();
+  sIndexBlogContent = ss.str();
+  
+
   registerCallback("view", view);
   registerCallback("get", get);
 }
@@ -38,14 +48,14 @@ void view (const httplib::Request& req, httplib::Response& res) {
   }
   v.json(j["views"]);
 
-  res.set_content(Parser::parse(Path::relative("src/views/pages/Blog.html"), j), "text/html");
+  res.set_content(g_templates.render(sIndexBlogContent, j), "text/html");
 }
 
 void get (const httplib::Request& req, httplib::Response& res) {
   auto id = req.matches[1];
-  std::optional<Views> page = g_views.find(std::stoi(id));
-  if (page.has_value()) {
-    res.set_content(Parser::parse(page.value()["path"]), "text/html");
+  Views* page = g_views.find(std::stoi(id));
+  if (page) {
+    res.set_content(g_templates.render(page->getContent(), nullptr), "text/html");
   } else {
     res.status = 404;
     res.reason = "Not Found";

@@ -19,9 +19,13 @@ window.onload = () => {
     github.style.cursor = "pointer";
   });
 
+  const paths = ['/blog', '/contact']
   for (let i = 0; i < nav.children.length; i++) {
     nav.children[i].addEventListener('pointerover', (e) => {
       nav.children[i].style.cursor = "pointer";
+    });
+    nav.children[i].addEventListener('click', (e) => {
+      document.location = paths[i];
     });
   }
 }

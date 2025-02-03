@@ -11,8 +11,8 @@
 template<typename T>
 class Container : public std::vector<T> {
   public:
-    const Container<T> get(std::function<bool(const T&)> cb = nullptr);
-    const std::optional<T> find(int id);
+    const Container<T> get(std::function<bool(const T&)> cb = nullptr); //TODO ret a pointer
+    T* find(int id);
     void json(nlohmann::json& out);
 };
 
@@ -48,17 +48,17 @@ void Container<T>::json(nlohmann::json& out) {
 }
 
 template<typename T>
-const std::optional<T> Container<T>::find(int id) {
+T* Container<T>::find(int id) {
   auto it = this->begin();
 
   while (it != this->end()) {
     if ((*it)["id"] == id) {
-      return *it;
+      return &(*it);
     }
     ++it;
   }
 
-  return {};
+  return nullptr;
 }
 
 #endif //SRC_UTILS_JSON_CONTAINER_H

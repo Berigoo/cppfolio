@@ -11,6 +11,7 @@ static bool isStarted = false;
 
 Container<Disk> g_disk;
 Container<Views> g_views;
+inja::Environment g_templates;
 
 void Server::setup () {
   assert(!isInitialized);
@@ -47,6 +48,11 @@ void Server::setup () {
     inja::render_to(os, ss.str(), data);
     g_views = Views::parseArray(os);
     file.close();
+  }
+
+  {
+    g_templates.include_template("blog.tmpl", 
+        g_templates.parse_template(Path::relative("src/views/templates/blog.tmpl")));
   }
 
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
