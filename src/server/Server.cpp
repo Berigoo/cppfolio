@@ -1,3 +1,5 @@
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+
 #include "Server.h"
 
 static bool isInitialized = false;
@@ -60,7 +62,7 @@ void Server::setup () {
   std::optional<std::string> key = Env::get<std::string>("SERVER_SSL_KEY");
   assert(crt.has_value() && key.has_value());
 
-  server = std::make_unique<httplib::SSLServer>(crt.value(), key.value());
+ server = std::make_unique<httplib::SSLServer>(crt.value().c_str(), key.value().c_str(), nullptr);
 #else 
   server = std::make_unique<httplib::Server>();
 #endif 

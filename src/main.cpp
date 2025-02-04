@@ -2,7 +2,7 @@
 #include "server/Server.h"
 
 int main () {
-  Server::setup();
+  Server::setup(); //TODO add routes
 
   Router route;
 
