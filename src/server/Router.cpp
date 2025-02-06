@@ -9,7 +9,7 @@ Router::Router () {
   Server::GET("/", (Controller::Instance<ControllerBasic>())->handleBy("view"));
 
   Server::GET(R"(/blog(:?/)?)", (Controller::Instance<ControllerBlog>())->handleBy("view"));
-  Server::GET(R"(/blog/(\d+))", (Controller::Instance<ControllerBlog>())->handleBy("get"));
+  Server::GET(R"(/blog/(\d{1,3}))", (Controller::Instance<ControllerBlog>())->handleBy("get"));
 
   isConstructed = true;
 }
